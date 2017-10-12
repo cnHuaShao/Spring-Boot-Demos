@@ -1,6 +1,5 @@
 package com.cnhuashao.springbootactivemqshiro.core.realm;
 
-import com.cnhuashao.springbootactivemqshiro.core.service.LoginService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.Realm;
 import org.slf4j.Logger;
@@ -12,16 +11,16 @@ import org.slf4j.LoggerFactory;
  * 这是一个依据Spring Boot官方API编写的相关功能测试用例，仅供学习使用。
  *
  * @Description: TODO 创建人：lz239
- * @CreateDate 2017 2017/10/10 16:50 10 修改人：lz239
+ * @CreateDate 2017 2017/10/11 9:23 10 修改人：lz239
  * <a href="mailto:lz2392504@gmail.com">cnhuashao $</a>
  * 修改备注：
  * @since V1.0
  */
-public class UserRealm implements Realm {
-    private static Logger log = LoggerFactory.getLogger(UserRealm.class);
+public class UserRealm2  implements Realm {
+    private static Logger log = LoggerFactory.getLogger(UserRealm2.class);
     @Override
     public String getName() {
-        return "userRealm";
+        return "UserRealm2";
     }
 
     @Override
@@ -32,18 +31,18 @@ public class UserRealm implements Realm {
 
     @Override
     public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        log.info("开始进行自定义UserRealm身份验证");
+        log.info("开始进行自定义UserRealm2身份验证");
         String username=(String)token.getPrincipal();
         String password=new String((char[])token.getCredentials());
         //判断用户名是否错误
-        if (!"cnhuashao".equals(username)){
+        if (!"test".equals(username)){
             throw new UnknownAccountException();
         }
         //判断密码是否错误
-        if (!"cnhuashao".equals(password)){
+        if (!"123".equals(password)){
             throw new IncorrectCredentialsException();
         }
-        log.info("自定义UserRealm身份验证完成");
+        log.info("自定义身份UserRealm2验证完成");
         return new SimpleAuthenticationInfo(username,password,getName());
     }
 }

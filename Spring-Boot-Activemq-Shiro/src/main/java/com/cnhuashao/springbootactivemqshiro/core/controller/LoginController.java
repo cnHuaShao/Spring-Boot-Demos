@@ -33,9 +33,25 @@ public class LoginController {
     }
     @RequestMapping("/loginRealm")
     public String loginRealm(UserBean ub){
-        //测试地址,基础登录,基于user.ini用户表
+        //测试地址,自定义realm认证
         //http://127.0.0.1:8080/loginRealm?name=cnhuashao&pwd=cnhuashao
         loginService.loginSelectUserRealm(ub);
+        return null;
+    }
+
+    @RequestMapping("/loginMultiRealm")
+    public String loginMultiRealm(UserBean ub){
+        //测试地址,自定义多个realm认证
+        //http://127.0.0.1:8080/loginMultiRealm?name=cnhuashao&pwd=cnhuashao
+        loginService.loginSelectMultiUserRealm(ub);
+        return null;
+    }
+
+    @RequestMapping("/loginSelectJDBC")
+    public String loginSelectJDBC(UserBean ub){
+        //测试地址,连接数据库进行身份认证
+        //http://127.0.0.1:8080/loginSelectJDBC?name=cnhuashao&pwd=cnhuashao
+        loginService.loginSelectJDBC(ub);
         return null;
     }
 }

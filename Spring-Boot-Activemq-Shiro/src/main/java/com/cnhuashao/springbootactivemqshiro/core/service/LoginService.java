@@ -33,6 +33,10 @@ public class LoginService {
     @Autowired
     private UserBean userBean;
 
+    /**
+     * 使用原生身份认证进行判定
+     * @param ub
+     */
     public void loginSelect(UserBean ub){
         log.info("开始进行登录业务处理");
 
@@ -80,6 +84,10 @@ public class LoginService {
         log.info("登录业务处理完成");
     }
 
+    /**
+     * 使用单个自定义realm进行身份判定
+     * @param ub
+     */
     public void loginSelectUserRealm(UserBean ub){
         log.info("开始进行登录业务处理");
 
@@ -114,4 +122,82 @@ public class LoginService {
 
         log.info("登录业务处理完成");
     }
+
+    /**
+     * 使用多个自定义realm进行身份判定，只要其中一个Realm成功，则登录成功
+     * @param ub
+     */
+    public void loginSelectMultiUserRealm(UserBean ub){
+        log.info("开始进行登录业务处理");
+
+        //1、开始打开SecurityManager工厂
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:user-realm-multi.ini");
+        //2、得到SecurityManager实例
+        SecurityManager securityManager=factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(ub.getName(),ub.getPwd());
+        try{
+            subject.login(usernamePasswordToken);
+        }catch (LockedAccountException e){
+            log.error("该账号已被锁定");
+        }catch (DisabledAccountException e){
+            log.error("该账号已被禁用");
+        }catch (UnknownAccountException e){
+            log.error("账号不存在");
+        }catch (ExcessiveAttemptsException e){
+            log.error("登录失败次数过多");
+        }catch (IncorrectCredentialsException e){
+            log.error("用户名/密码错误");
+        }catch (ExpiredCredentialsException e){
+            log.error("登录凭证过期");
+        }catch (AuthenticationException e){
+            log.error("登录失败");
+        }
+        log.info(subject.isAuthenticated()? "登录成功":"登录失败");
+
+        //退出登录
+        subject.logout();
+
+        log.info("登录业务处理完成");
+    }
+
+
+    public void loginSelectJDBC(UserBean ub){
+        log.info("开始进行登录业务处理");
+
+        //1、开始打开SecurityManager工厂
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:user-mysql-realm.ini");
+        //2、得到SecurityManager实例
+        SecurityManager securityManager=factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(ub.getName(),ub.getPwd());
+        try{
+            subject.login(usernamePasswordToken);
+        }catch (LockedAccountException e){
+            log.error("该账号已被锁定");
+        }catch (DisabledAccountException e){
+            log.error("该账号已被禁用");
+        }catch (UnknownAccountException e){
+            log.error("账号不存在");
+        }catch (ExcessiveAttemptsException e){
+            log.error("登录失败次数过多");
+        }catch (IncorrectCredentialsException e){
+            log.error("用户名/密码错误");
+        }catch (ExpiredCredentialsException e){
+            log.error("登录凭证过期");
+        }catch (AuthenticationException e){
+            log.error("登录失败");
+        }
+        log.info(subject.isAuthenticated()? "登录成功":"登录失败");
+
+        //退出登录
+        subject.logout();
+
+        log.info("登录业务处理完成");
+    }
+
+
+
 }
