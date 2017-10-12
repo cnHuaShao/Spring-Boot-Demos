@@ -1,6 +1,7 @@
 package com.cnhuashao.springbootactivemqshiro.core.controller;
 
 import com.cnhuashao.springbootactivemqshiro.core.bean.UserBean;
+import com.cnhuashao.springbootactivemqshiro.core.service.LoginAuthenticatorService;
 import com.cnhuashao.springbootactivemqshiro.core.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.HttpRequestHandler;
@@ -23,6 +24,9 @@ public class LoginController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private LoginAuthenticatorService loginAuthenticatorService;
 
     @RequestMapping("/login")
     public String login(UserBean ub){
@@ -52,6 +56,17 @@ public class LoginController {
         //测试地址,连接数据库进行身份认证
         //http://127.0.0.1:8080/loginSelectJDBC?name=cnhuashao&pwd=cnhuashao
         loginService.loginSelectJDBC(ub);
+        return null;
+    }
+
+
+    @RequestMapping("/loginAuthenticator")
+    public String loginAuthenticator(UserBean ub){
+
+        //测试地址,连接数据库进行身份认证
+        //http://127.0.0.1:8080/loginAuthenticator?name=cnhuashao&pwd=cnhuashao
+        loginAuthenticatorService.AllSuccessfulStrategyWithSuccess();
+
         return null;
     }
 }
